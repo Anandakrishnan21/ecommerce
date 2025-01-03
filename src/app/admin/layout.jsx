@@ -1,4 +1,5 @@
-import { Nav, NavLink } from "@/components/Sidebar";
+import { Nav, NavLink } from "@/app/admin/_components/Sidebar";
+import { Toaster } from "@/components/ui/toaster";
 import {
   AiOutlineDashboard,
   AiOutlineShopping,
@@ -22,7 +23,10 @@ export default function AdminLayout({ children }) {
           Orders
         </NavLink>
       </Nav>
-      <div className="p-4">{children}</div>
+      <div className="p-4">
+        {children}
+        <Toaster />
+      </div>
     </div>
   );
 }
