@@ -58,7 +58,7 @@ function ProductForm() {
         toast({
           variant: "destructive",
           title: "Product already exists!",
-          description: `Product with ${productName} and ${price} already exists`,
+          description: `Product with "${productName}" and "${price}" already exists`,
         });
         return;
       }
