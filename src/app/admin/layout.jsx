@@ -1,6 +1,7 @@
 import { Nav, NavLink } from "@/app/admin/_components/Sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import {
+  AiOutlineCode,
   AiOutlineDashboard,
   AiOutlineShopping,
   AiOutlineTag,
@@ -21,6 +22,10 @@ export default function AdminLayout({ children }) {
         <NavLink href="/admin/orders">
           <AiOutlineShopping size={16} />
           Orders
+        </NavLink>
+        <NavLink href="/admin/coupons">
+          <AiOutlineCode size={16} />
+          Coupons
         </NavLink>
       </Nav>
       <div className="p-4">

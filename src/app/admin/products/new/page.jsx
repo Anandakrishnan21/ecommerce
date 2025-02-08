@@ -1,6 +1,6 @@
 import PageHeader from "@/app/admin/_components/PageHeader";
 import React from "react";
-import ProductForm from "../../_components/ProductForm";
+import ProductForm from "./_components/ProductForm";
 
 function ProductCreateForm() {
   return (

@@ -1,3 +1,4 @@
+import DeleteButton from "@/app/admin/_components/DeleteButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +19,6 @@ import { useToast } from "@/hooks/use-toast";
 import { CheckCircle2, MoreVertical, XCircle } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import DeleteButton from "./DeleteButton";
 
 function ProductTable() {
   const { toast } = useToast();
