@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
+import { getProducts } from "@/utils/api";
 import { CheckCircle2, MoreVertical, XCircle } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -27,19 +28,7 @@ function ProductTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/product", {
-          cache: "no-store",
-        });
-
-        if (!res.ok) {
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Failed to fetch data!",
-          });
-        }
-
-        const data = await res.json();
+        const data = await getProducts();
         setProducts(data);
       } catch (error) {
         toast({
@@ -50,7 +39,7 @@ function ProductTable() {
       }
     };
     fetchData();
-  }, []);
+  }, [toast]);
 
   return (
     <Table>

@@ -4,8 +4,17 @@ import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/formatter";
+import { getProducts } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useState } from "react";
@@ -13,11 +22,13 @@ import * as yup from "yup";
 
 function CouponForm() {
   const { toast } = useToast();
+  const [products, setProducts] = useState([]);
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [type, setType] = useState("percentage");
-  const [limit, setLimit] = useState("");
+  const [limit, setLimit] = useState(0);
+  const [usersCount, setUsersCount] = useState(0);
   const [expiresAt, setExpiresAt] = useState();
   const [productName, setProductName] = useState("");
   const [errors, setErrors] = useState({});
@@ -26,11 +37,28 @@ function CouponForm() {
     setIsClient(true);
   });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error,
+        });
+      }
+    };
+    fetchData();
+  }, [toast]);
+
   const couponSchema = yup.object().shape({
     couponCode: yup.string().required("Code is required"),
     type: yup.string().required("Type is required"),
+    usersCount: yup.number().typeError("Type should be number"),
     limit: yup.number().typeError("Type should be number"),
-    expiresAt: yup.string().required("Expired date is required"),
+    expiresAt: yup.string(),
     productName: yup.string().required("Product name is required"),
   });
 
@@ -39,6 +67,7 @@ function CouponForm() {
     const couponData = {
       couponCode,
       type,
+      usersCount: parseInt(usersCount),
       limit: parseInt(limit),
       expiresAt: expiresAt ? formatDate(expiresAt) : "",
       productName,
@@ -65,7 +94,7 @@ function CouponForm() {
         return;
       }
 
-      const res = await fetch("/api/coupons", {
+      const res = await fetch("/api/coupon", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -80,7 +109,7 @@ function CouponForm() {
           title: "Success",
           description: "Coupon added successfully!",
         });
-        router.push("/admin/coupon");
+        router.push("/admin/coupons");
       } else {
         toast({
           variant: "destructive",
@@ -110,7 +139,7 @@ function CouponForm() {
   return (
     <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
       <div className="space-y-2">
-        <Label htmlFor="code">Code</Label>
+        <Label htmlFor="code">Coupon Code</Label>
         <Input
           placeholder="Coupon code"
           id="code"
@@ -118,6 +147,9 @@ function CouponForm() {
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value)}
         />
+        {errors.couponCode && (
+          <div className="text-red-600 text-sm">{errors.couponCode}</div>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="discount">Discount Type</Label>
@@ -133,14 +165,31 @@ function CouponForm() {
         </RadioGroup>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="limit">Limit</Label>
+        <p className="text-sm">{type === "percentage" ? limit + "%" : limit}</p>
+        <Slider
+          defaultValue={[limit]}
+          max={type === "percentage" ? 50 : 200}
+          onChange={(e) => setLimit(e.target.value)}
+          step={10}
+        />
+        {errors.limit && (
+          <div className="text-red-600 text-sm">{errors.limit}</div>
+        )}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="usersCount">Limit</Label>
         <Input
           placeholder="Limit"
-          id="limit"
-          name="limit"
-          value={limit}
-          onChange={(e) => setLimit(e.target.value)}
+          value={usersCount}
+          onChange={(e) => {
+            if (/^\d*\.?\d*$/.test(e.target.value)) {
+              setUsersCount(e.target.value);
+            }
+          }}
         />
+        {errors.usersCount && (
+          <div className="text-red-600 text-sm">{errors.usersCount}</div>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="expiration">Expires At</Label>
@@ -148,13 +197,22 @@ function CouponForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="productName">Product Name</Label>
-        <Input
-          placeholder="Product Name"
-          id="productName"
-          name="productName"
-          value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-        />
+        <Select onValueChange={setProductName}>
+          <SelectTrigger>
+            <SelectValue placeholder="Product name" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="All products">All products</SelectItem>
+            {products.map((product) => (
+              <SelectItem value={product.productName} key={product._id}>
+                {product.productName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.productName && (
+          <div className="text-red-600 text-sm">{errors.productName}</div>
+        )}
       </div>
       <Button type="submit" variant="default">
         Save

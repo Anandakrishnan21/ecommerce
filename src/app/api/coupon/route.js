@@ -4,12 +4,13 @@ import { NextResponse } from "next/server";
 
 export const POST = async (req, res) => {
   try {
-    const { couponCode, type, limit, expiresAt, productName } =
+    const { couponCode, type, usersCount, limit, expiresAt, productName } =
       await req.json();
     await connection();
     const coupons = await Coupon.create({
       couponCode,
       type,
+      usersCount,
       limit,
       expiresAt,
       productName,
@@ -23,6 +24,19 @@ export const POST = async (req, res) => {
   } catch (error) {
     return NextResponse.json(
       { message: "An error occurred while creating the coupon" },
+      { status: 500 }
+    );
+  }
+};
+
+export const GET = async (req) => {
+  try {
+    await connection();
+    const coupons = await Coupon.find().sort({ createdAt: -1 });
+    return new NextResponse(JSON.stringify(coupons), { status: 200 });
+  } catch (error) {
+    return new NextResponse(
+      "An error occurred while retrieving coupons" + error,
       { status: 500 }
     );
   }

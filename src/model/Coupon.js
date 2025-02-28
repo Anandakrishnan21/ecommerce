@@ -14,9 +14,11 @@ const couponSchema = new Schema(
       type: Number,
       required: true,
     },
+    usersCount: {
+      type: Number,
+    },
     expiresAt: {
       type: String,
-      required: true,
     },
     productName: {
       type: String,
