@@ -80,7 +80,7 @@ function UpdatedCouponForm({
       toast({
         variant: "destructive",
         title: "No changes detected!",
-        description: "You haven't modified any product details",
+        description: "You haven't modified any coupon details",
       });
       return;
     }
