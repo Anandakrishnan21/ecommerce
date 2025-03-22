@@ -4,7 +4,7 @@ import { UploadButton } from "@/utils/uploadthing";
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 
-function FileInput({ id, name, setFilePath }) {
+function FileInput({ id, name, filePath, setFilePath }) {
   const { toast } = useToast();
   const [filePreview, setFilePreview] = useState(null);
 
@@ -41,9 +41,9 @@ function FileInput({ id, name, setFilePath }) {
         onUploadError={handleUploadError}
       />
       <div className="w-20 h-20 flex items-center justify-center text-sm border-[1px] border-dashed border-gray-400 rounded-md font-medium hover:border-blue-500 focus:outline-none focus:ring focus:ring-blue-500 focus:ring-opacity-50">
-        {filePreview ? (
+        {filePreview || filePath ? (
           <Image
-            src={filePreview}
+            src={filePreview || filePath}
             width={55}
             height={50}
             alt="File preview"

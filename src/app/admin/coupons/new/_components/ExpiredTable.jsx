@@ -18,6 +18,7 @@ import React from "react";
 import { CircleX, Infinity, MoreVertical } from "lucide-react";
 import SubHeader from "@/app/admin/_components/SubHeader";
 import { AiOutlineGlobal } from "react-icons/ai";
+import Link from "next/link";
 
 function ExpiredTable({ expiredCoupons }) {
   return (
@@ -69,7 +70,11 @@ function ExpiredTable({ expiredCoupons }) {
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Download</DropdownMenuItem>
-                    <DropdownMenuItem>Update</DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href={`/admin/coupons/edit/${coupon._id}`}>
+                        Update
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem>Deactivate</DropdownMenuItem>
                     {/* <DeleteButton id={product._id} setProducts={setProducts} /> */}
                   </DropdownMenuContent>

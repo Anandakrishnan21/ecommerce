@@ -13,25 +13,31 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
-import { formatDate } from "@/lib/formatter";
 import { getProducts } from "@/utils/api";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as yup from "yup";
 
-function CouponForm() {
+function UpdatedCouponForm({
+  id,
+  couponCode: initialCouponCode,
+  type: initialType,
+  usersCount: initialUsersCount,
+  limit: initialLimit,
+  expiresAt: initialExpiresAt,
+  productName: initialProductName,
+}) {
   const { toast } = useToast();
-  const [products, setProducts] = useState([]);
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
-  const [couponCode, setCouponCode] = useState("");
-  const [type, setType] = useState("percentage");
-  const [limit, setLimit] = useState(0);
-  const [usersCount, setUsersCount] = useState(0);
-  const [expiresAt, setExpiresAt] = useState();
-  const [productName, setProductName] = useState("");
+  const [products, setProducts] = useState([]);
+  const [couponCode, setCouponCode] = useState(initialCouponCode);
+  const [type, setType] = useState(initialType);
+  const [usersCount, setUsersCount] = useState(initialUsersCount);
+  const [limit, setLimit] = useState(initialLimit);
+  const [expiresAt, setExpiresAt] = useState(initialExpiresAt);
+  const [productName, setProductName] = useState(initialProductName);
   const [errors, setErrors] = useState({});
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -62,14 +68,29 @@ function CouponForm() {
     productName: yup.string().required("Product name is required"),
   });
 
-  const handleSubmit = async (e) => {
+  const handleUpdateCoupon = async (e) => {
     e.preventDefault();
+
+    if (
+      couponCode === initialCouponCode &&
+      type === initialType &&
+      limit === initialLimit &&
+      productName === initialProductName
+    ) {
+      toast({
+        variant: "destructive",
+        title: "No changes detected!",
+        description: "You haven't modified any product details",
+      });
+      return;
+    }
+
     const couponData = {
       couponCode,
-      type,
-      usersCount: parseInt(usersCount),
-      limit: parseInt(limit),
-      expiresAt: expiresAt ? formatDate(expiresAt) : "",
+      type: parseFloat(type),
+      usersCount: parseFloat(usersCount),
+      limit: parseFloat(limit),
+      expiresAt,
       productName,
     };
 
@@ -77,53 +98,35 @@ function CouponForm() {
       await couponSchema.validate(couponData, { abortEarly: false });
       setErrors({});
 
-      const resExists = await fetch("/api/couponExists", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ couponCode, type, productName }),
-      });
-
-      const { couponExists } = await resExists.json();
-
-      if (couponExists) {
-        toast({
-          variant: "destructive",
-          title: "Coupon already exists!",
-          description: "Coupon with similar data is already exists",
-        });
-        return;
-      }
-
-      const res = await fetch("/api/coupon", {
-        method: "POST",
+      const res = await fetch(`/api/coupon/${id}`, {
+        method: "PUT",
         headers: {
-          "Content-type": "application/json",
+          "content-type": "application/json",
         },
         body: JSON.stringify(couponData),
       });
 
       if (res.ok) {
-        e.target.reset();
         toast({
           variant: "success",
           title: "Success",
-          description: "Coupon added successfully!",
+          description: "Coupon updated successfully!",
         });
         router.push("/admin/coupons");
       } else {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Failed to add coupon!",
+          description: "Failed to update coupon!",
         });
       }
     } catch (error) {
       if (error instanceof yup.ValidationError) {
-        const newError = {};
+        const newErrors = {};
         error.inner.forEach((err) => {
-          newError[err.path] = err.message;
+          newErrors[err.path] = err.message;
         });
-        setErrors(newError);
+        setErrors(newErrors);
       } else {
         toast({
           variant: "destructive",
@@ -137,7 +140,7 @@ function CouponForm() {
   if (!isClient) return null;
 
   return (
-    <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+    <form className="flex flex-col gap-2" onSubmit={handleUpdateCoupon}>
       <div className="space-y-2">
         <Label htmlFor="code">Coupon Code</Label>
         <Input
@@ -153,10 +156,17 @@ function CouponForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="discount">Discount Type</Label>
-        <RadioGroup defaultValue={type} onValueChange={(value) => {
-          setType(value);
-          setLimit(0)
-        }}>
+        <RadioGroup
+          defaultValue={type}
+          onValueChange={(value) => {
+            setType(value);
+            if (type != initialType) {
+              setLimit(initialLimit);
+            } else {
+              setLimit(0);
+            }
+          }}
+        >
           <div className="flex gap-2 items-center">
             <RadioGroupItem value="percentage" id="percentage" />
             <Label htmlFor="percentage">Percentage</Label>
@@ -200,7 +210,7 @@ function CouponForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="productName">Product Name</Label>
-        <Select onValueChange={setProductName}>
+        <Select onValueChange={setProductName} defaultValue={productName}>
           <SelectTrigger>
             <SelectValue placeholder="Product name" />
           </SelectTrigger>
@@ -224,4 +234,4 @@ function CouponForm() {
   );
 }
 
-export default CouponForm;
+export default UpdatedCouponForm;

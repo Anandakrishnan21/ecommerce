@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getProducts } from "@/utils/api";
 import { CheckCircle2, MoreVertical, XCircle } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 function ProductTable() {
@@ -86,7 +87,9 @@ function ProductTable() {
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Download</DropdownMenuItem>
-                  <DropdownMenuItem>Update</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href={`/admin/products/edit/${product._id}`}>Update</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>Deactivate</DropdownMenuItem>
                   <DeleteButton id={product._id} setProducts={setProducts} />
                 </DropdownMenuContent>

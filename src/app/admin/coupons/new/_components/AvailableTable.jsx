@@ -17,6 +17,7 @@ import {
 import React from "react";
 import { CircleCheck, Infinity, MoreVertical } from "lucide-react";
 import { AiOutlineGlobal } from "react-icons/ai";
+import Link from "next/link";
 
 function AvailableTable({ availableCoupons }) {
   return (
@@ -64,7 +65,11 @@ function AvailableTable({ availableCoupons }) {
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Download</DropdownMenuItem>
-                  <DropdownMenuItem>Update</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href={`/admin/coupons/edit/${coupon._id}`}>
+                      Update
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>Deactivate</DropdownMenuItem>
                   {/* <DeleteButton id={product._id} setProducts={setProducts} /> */}
                 </DropdownMenuContent>
