@@ -20,10 +20,12 @@ import { getProducts } from "@/utils/api";
 import { CheckCircle2, MoreVertical, XCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 function ProductTable() {
   const { toast } = useToast();
+  const router = useRouter();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -41,6 +43,40 @@ function ProductTable() {
     };
     fetchData();
   }, [toast]);
+
+  const handleAvailability = async (id, currentStatus) => {
+    try {
+      const newStatus = !currentStatus;
+      const res = await fetch(`/api/product/${id}`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ isAvailableForPurchase: newStatus }),
+      });
+
+      if (res.ok) {
+        toast({
+          variant: "success",
+          title: "Success",
+          description: "Successfully update the status",
+        });
+        router.refresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Failed",
+          description: "Failed to update the status",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
+    }
+  };
 
   return (
     <Table>
@@ -61,12 +97,12 @@ function ProductTable() {
               {product.isAvailableForPurchase ? (
                 <>
                   <span className="sr-only">Available</span>
-                  <CheckCircle2 size={16} />
+                  <CheckCircle2 size={16} color="blue" />
                 </>
               ) : (
                 <>
                   <span className="sr-only">Unavailable</span>
-                  <XCircle />
+                  <XCircle size={16} color="red" />
                 </>
               )}
             </TableCell>
@@ -88,9 +124,33 @@ function ProductTable() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Download</DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href={`/admin/products/edit/${product._id}`}>Update</Link>
+                    <Link href={`/admin/products/edit/${product._id}`}>
+                      Update
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>Deactivate</DropdownMenuItem>
+                  {product.isAvailableForPurchase === true ? (
+                    <DropdownMenuItem
+                      onClick={() =>
+                        handleAvailability(
+                          product._id,
+                          product.isAvailableForPurchase
+                        )
+                      }
+                    >
+                      Deactivate
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem
+                      onClick={() =>
+                        handleAvailability(
+                          product._id,
+                          product.isAvailableForPurchase
+                        )
+                      }
+                    >
+                      Activate
+                    </DropdownMenuItem>
+                  )}
                   <DeleteButton id={product._id} setProducts={setProducts} />
                 </DropdownMenuContent>
               </DropdownMenu>

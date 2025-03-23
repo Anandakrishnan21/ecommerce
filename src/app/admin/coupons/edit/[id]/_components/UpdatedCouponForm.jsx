@@ -32,7 +32,7 @@ function UpdatedCouponForm({
   const [products, setProducts] = useState([]);
   const [couponCode, setCouponCode] = useState(initialCouponCode);
   const [type, setType] = useState(initialType);
-  const [usersCount, setUsersCount] = useState(initialUsersCount);
+  const [usersCount, setUsersCount] = useState(initialUsersCount || 0);
   const [limit, setLimit] = useState(initialLimit);
   const [expiresAt, setExpiresAt] = useState(initialExpiresAt);
   const [productName, setProductName] = useState(initialProductName);
@@ -87,7 +87,7 @@ function UpdatedCouponForm({
 
     const couponData = {
       couponCode,
-      type: parseFloat(type),
+      type,
       usersCount: parseFloat(usersCount),
       limit: parseFloat(limit),
       expiresAt,
@@ -160,7 +160,7 @@ function UpdatedCouponForm({
           defaultValue={type}
           onValueChange={(value) => {
             setType(value);
-            if (type != initialType) {
+            if (value === initialType) {
               setLimit(initialLimit);
             } else {
               setLimit(0);
@@ -193,10 +193,10 @@ function UpdatedCouponForm({
         <Label htmlFor="usersCount">Limit</Label>
         <Input
           placeholder="Limit"
-          value={usersCount}
+          value={!usersCount ? 0 : usersCount}
           onChange={(e) => {
             if (/^\d*\.?\d*$/.test(e.target.value)) {
-              setUsersCount(e.target.value);
+              !usersCount ? setUsersCount(0) : setUsersCount(e.target.value);
             }
           }}
         />
