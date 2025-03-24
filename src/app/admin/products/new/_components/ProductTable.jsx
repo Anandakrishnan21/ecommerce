@@ -92,7 +92,7 @@ function ProductTable() {
       </TableHeader>
       <TableBody>
         {products.map((product) => (
-          <TableRow key={product._id}>
+          <TableRow key={product._id} className={`${product.isAvailableForPurchase ? "" : "opacity-80"}`}>
             <TableCell>
               {product.isAvailableForPurchase ? (
                 <>

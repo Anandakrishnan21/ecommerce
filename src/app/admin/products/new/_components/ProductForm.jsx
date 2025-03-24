@@ -117,7 +117,9 @@ function ProductForm() {
   return (
     <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
       <div>
-        <Label htmlFor="productName">Name</Label>
+        <Label htmlFor="productName" variant="required">
+          Name
+        </Label>
         <Input
           id="productName"
           name="productName"
@@ -131,7 +133,9 @@ function ProductForm() {
       </div>
 
       <div>
-        <Label htmlFor="price">Price</Label>
+        <Label htmlFor="price" variant="required">
+          Price
+        </Label>
         <Input
           id="price"
           name="price"
@@ -149,7 +153,9 @@ function ProductForm() {
       </div>
 
       <div>
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description" variant="required">
+          Description
+        </Label>
         <Textarea
           id="description"
           name="description"
@@ -171,14 +177,18 @@ function ProductForm() {
 
       <div className="flex gap-2">
         <div>
-          <Label htmlFor="file">File</Label>
+          <Label htmlFor="file" variant="required">
+            File
+          </Label>
           <FileInput id="file" name="file" setFilePath={setFilePath} />
           {errors.filePath && (
             <div className="text-red-600 text-sm">{errors.filePath}</div>
           )}
         </div>
         <div>
-          <Label htmlFor="image">Image</Label>
+          <Label htmlFor="image" variant="required">
+            Image
+          </Label>
           <ImageInput id="image" name="image" setImagePath={setImagePath} />
           {errors.imagePath && (
             <div className="text-red-600 text-sm">{errors.imagePath}</div>

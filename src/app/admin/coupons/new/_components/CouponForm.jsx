@@ -139,7 +139,9 @@ function CouponForm() {
   return (
     <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
       <div className="space-y-2">
-        <Label htmlFor="code">Coupon Code</Label>
+        <Label htmlFor="code" variant="required">
+          Coupon Code
+        </Label>
         <Input
           placeholder="Coupon code"
           id="code"
@@ -153,10 +155,13 @@ function CouponForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="discount">Discount Type</Label>
-        <RadioGroup defaultValue={type} onValueChange={(value) => {
-          setType(value);
-          setLimit(0)
-        }}>
+        <RadioGroup
+          defaultValue={type}
+          onValueChange={(value) => {
+            setType(value);
+            setLimit(0);
+          }}
+        >
           <div className="flex gap-2 items-center">
             <RadioGroupItem value="percentage" id="percentage" />
             <Label htmlFor="percentage">Percentage</Label>
@@ -199,7 +204,9 @@ function CouponForm() {
         <DatePicker date={expiresAt} setDate={setExpiresAt} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="productName">Product Name</Label>
+        <Label htmlFor="productName" variant="required">
+          Product Name
+        </Label>
         <Select onValueChange={setProductName}>
           <SelectTrigger>
             <SelectValue placeholder="Product name" />

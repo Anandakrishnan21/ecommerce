@@ -130,7 +130,9 @@ function UpdateProductForm({
   return (
     <form className="flex flex-col gap-2" onSubmit={handleUpdate}>
       <div>
-        <Label htmlFor="productName">Name</Label>
+        <Label htmlFor="productName" variant="required">
+          Name
+        </Label>
         <Input
           id="productName"
           name="productName"
@@ -144,7 +146,9 @@ function UpdateProductForm({
       </div>
 
       <div>
-        <Label htmlFor="price">Price</Label>
+        <Label htmlFor="price" variant="required">
+          Price
+        </Label>
         <Input
           id="price"
           name="price"
@@ -162,7 +166,9 @@ function UpdateProductForm({
       </div>
 
       <div>
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description" variant="required">
+          Description
+        </Label>
         <Textarea
           id="description"
           name="description"
@@ -184,7 +190,9 @@ function UpdateProductForm({
 
       <div className="flex gap-2">
         <div>
-          <Label htmlFor="file">File</Label>
+          <Label htmlFor="file" variant="required">
+            File
+          </Label>
           <FileInput
             id="file"
             name="file"
@@ -196,7 +204,9 @@ function UpdateProductForm({
           )}
         </div>
         <div>
-          <Label htmlFor="image">Image</Label>
+          <Label htmlFor="image" variant="required">
+            Image
+          </Label>
           <ImageInput
             id="image"
             name="image"

@@ -142,7 +142,9 @@ function UpdatedCouponForm({
   return (
     <form className="flex flex-col gap-2" onSubmit={handleUpdateCoupon}>
       <div className="space-y-2">
-        <Label htmlFor="code">Coupon Code</Label>
+        <Label htmlFor="code" variant="required">
+          Coupon Code
+        </Label>
         <Input
           placeholder="Coupon code"
           id="code"
@@ -209,7 +211,9 @@ function UpdatedCouponForm({
         <DatePicker date={expiresAt} setDate={setExpiresAt} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="productName">Product Name</Label>
+        <Label htmlFor="productName" variant="required">
+          Product Name
+        </Label>
         <Select onValueChange={setProductName} defaultValue={productName}>
           <SelectTrigger>
             <SelectValue placeholder="Product name" />
