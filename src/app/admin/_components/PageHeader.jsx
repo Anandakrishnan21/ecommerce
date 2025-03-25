@@ -1,11 +1,21 @@
-import React from 'react'
+import { cva } from "class-variance-authority";
+import React from "react";
 
-function PageHeader({children}) {
-  return (
-    <h1 className='text-xl font-medium'>
-      {children}
-    </h1>
-  )
+const headerVariants = cva("font-medium", {
+  variants: {
+    variant: {
+      large: "text-xl",
+      medium: "text-lg",
+      small: "text-sm"
+    },
+  },
+  defaultVariants:{
+    default: "text-lg"
+  }
+});
+
+function PageHeader({ children, variant }) {
+  return <h1 className={headerVariants({variant})}>{children}</h1>;
 }
 
-export default PageHeader
+export default PageHeader;

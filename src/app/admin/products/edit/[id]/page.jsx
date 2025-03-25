@@ -33,7 +33,7 @@ async function UpdateProductPage({ params }) {
 
   return (
     <div>
-      <PageHeader>Update the product</PageHeader>
+      <PageHeader variant="large">Update the product</PageHeader>
       <div className="w-3/4 pt-4">
         <UpdateProductForm
           id={id}

@@ -16,14 +16,15 @@ import {
 } from "@/components/ui/table";
 import React from "react";
 import { CircleX, Infinity, MoreVertical } from "lucide-react";
-import SubHeader from "@/app/admin/_components/SubHeader";
 import { AiOutlineGlobal } from "react-icons/ai";
 import Link from "next/link";
+import PageHeader from "@/app/admin/_components/PageHeader";
+import DeleteCoupon from "@/app/admin/_components/DeleteCoupon";
 
-function ExpiredTable({ expiredCoupons }) {
+function ExpiredTable({ expiredCoupons, setCoupons }) {
   return (
     <div className="mt-10">
-      <SubHeader>Expired coupon</SubHeader>
+      <PageHeader variant="small">Expired coupon</PageHeader>
       <Table>
         <TableHeader>
           <TableRow>
@@ -75,8 +76,7 @@ function ExpiredTable({ expiredCoupons }) {
                         Update
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>Deactivate</DropdownMenuItem>
-                    {/* <DeleteButton id={product._id} setProducts={setProducts} /> */}
+                    <DeleteCoupon id={coupon._id} setCoupons={setCoupons} />
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

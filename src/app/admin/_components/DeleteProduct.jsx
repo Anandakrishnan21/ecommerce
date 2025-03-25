@@ -2,7 +2,7 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import React from "react";
 
-function DeleteButton({ id, setProducts }) {
+function DeleteProduct({ id, setProducts }) {
   const { toast } = useToast();
 
   const handleDelete = async () => {
@@ -42,4 +42,4 @@ function DeleteButton({ id, setProducts }) {
   );
 }
 
-export default DeleteButton;
+export default DeleteProduct;

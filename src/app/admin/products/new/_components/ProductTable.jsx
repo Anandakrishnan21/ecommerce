@@ -1,4 +1,4 @@
-import DeleteButton from "@/app/admin/_components/DeleteButton";
+import DeleteProduct from "@/app/admin/_components/DeleteProduct";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -151,7 +151,7 @@ function ProductTable() {
                       Activate
                     </DropdownMenuItem>
                   )}
-                  <DeleteButton id={product._id} setProducts={setProducts} />
+                  <DeleteProduct id={product._id} setProducts={setProducts} />
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

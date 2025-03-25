@@ -7,6 +7,7 @@ import ExpiredTable from "./ExpiredTable";
 
 function CouponTable() {
   const { toast } = useToast();
+  const [coupons, setCoupons] = useState([]);
   const [availableCoupons, setAvailableCoupons] = useState([]);
   const [expiredCoupons, setExpiredCoupons] = useState([]);
   const date = new Date();
@@ -22,6 +23,7 @@ function CouponTable() {
         const expired = data.filter((data) => {
           return data.expiresAt < formatDate(date);
         });
+        setCoupons(data);
         setAvailableCoupons(available);
         setExpiredCoupons(expired);
       } catch (error) {
@@ -37,8 +39,13 @@ function CouponTable() {
 
   return (
     <div>
-      <AvailableTable availableCoupons={availableCoupons} />
-      <ExpiredTable expiredCoupons={expiredCoupons} />
+      <AvailableTable
+        availableCoupons={availableCoupons}
+        setCoupons={setCoupons}
+      />
+      {expiredCoupons.length >= 1 ? (
+        <ExpiredTable expiredCoupons={expiredCoupons} setCoupons={setCoupons} />
+      ) : null}
     </div>
   );
 }

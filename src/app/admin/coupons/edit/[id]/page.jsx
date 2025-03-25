@@ -23,7 +23,7 @@ async function UpdateCouponPage({ params }) {
     coupon;
   return (
     <div>
-      <PageHeader>Update the coupon</PageHeader>
+      <PageHeader variant="large">Update the coupon</PageHeader>
       <div className="w-3/4 pt-4">
         <UpdatedCouponForm
           id={id}

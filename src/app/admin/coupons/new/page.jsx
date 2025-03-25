@@ -5,7 +5,7 @@ import CouponForm from "./_components/CouponForm";
 function CouponCreationForm() {
   return (
     <div>
-      <PageHeader>Create a new coupon</PageHeader>
+      <PageHeader variant="large">Create a new coupon</PageHeader>
       <div className="w-3/4 pt-4">
         <CouponForm />
       </div>
