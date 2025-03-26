@@ -7,6 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -22,15 +23,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { resolve } from "styled-jsx/css";
 
 function ProductTable() {
   const { toast } = useToast();
   const router = useRouter();
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 2000);
+        });
         const data = await getProducts();
         setProducts(data);
       } catch (error) {
@@ -39,6 +45,8 @@ function ProductTable() {
           title: "Error",
           description: error,
         });
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -91,72 +99,108 @@ function ProductTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {products.map((product) => (
-          <TableRow key={product._id} className={`${product.isAvailableForPurchase ? "" : "opacity-80"}`}>
-            <TableCell>
-              {product.isAvailableForPurchase ? (
-                <>
-                  <span className="sr-only">Available</span>
-                  <CheckCircle2 size={16} color="blue" />
-                </>
-              ) : (
-                <>
-                  <span className="sr-only">Unavailable</span>
-                  <XCircle size={16} color="red" />
-                </>
-              )}
-            </TableCell>
-            <TableCell>
-              <Image src={product.imagePath} width={20} height={20} alt="img" />
-            </TableCell>
-            <TableCell>{product.productName}</TableCell>
-            <TableCell>{product.price}</TableCell>
-            <TableCell>{product.description}</TableCell>
-            <TableCell>0</TableCell>
-            <TableCell>
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <MoreVertical size={16} />
-                  <span className="sr-only">Action</span>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Download</DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href={`/admin/products/edit/${product._id}`}>
-                      Update
-                    </Link>
-                  </DropdownMenuItem>
-                  {product.isAvailableForPurchase === true ? (
-                    <DropdownMenuItem
-                      onClick={() =>
-                        handleAvailability(
-                          product._id,
-                          product.isAvailableForPurchase
-                        )
-                      }
-                    >
-                      Deactivate
-                    </DropdownMenuItem>
+        {loading
+          ? Array.from({ length: 3 }).map((_, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <Skeleton className="h-4 w-4" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-6" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-28" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-28" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-28" />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-28" />
+                </TableCell>
+              </TableRow>
+            ))
+          : products.map((product) => (
+              <TableRow
+                key={product._id}
+                className={`${
+                  product.isAvailableForPurchase ? "" : "opacity-80"
+                }`}
+              >
+                <TableCell>
+                  {product.isAvailableForPurchase ? (
+                    <>
+                      <span className="sr-only">Available</span>
+                      <CheckCircle2 size={16} color="blue" />
+                    </>
                   ) : (
-                    <DropdownMenuItem
-                      onClick={() =>
-                        handleAvailability(
-                          product._id,
-                          product.isAvailableForPurchase
-                        )
-                      }
-                    >
-                      Activate
-                    </DropdownMenuItem>
+                    <>
+                      <span className="sr-only">Unavailable</span>
+                      <XCircle size={16} color="red" />
+                    </>
                   )}
-                  <DeleteProduct id={product._id} setProducts={setProducts} />
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
-          </TableRow>
-        ))}
+                </TableCell>
+                <TableCell>
+                  <Image
+                    src={product.imagePath}
+                    width={20}
+                    height={20}
+                    alt="img"
+                  />
+                </TableCell>
+                <TableCell>{product.productName}</TableCell>
+                <TableCell>{product.price}</TableCell>
+                <TableCell>{product.description}</TableCell>
+                <TableCell>0</TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <MoreVertical size={16} />
+                      <span className="sr-only">Action</span>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>Download</DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link href={`/admin/products/edit/${product._id}`}>
+                          Update
+                        </Link>
+                      </DropdownMenuItem>
+                      {product.isAvailableForPurchase === true ? (
+                        <DropdownMenuItem
+                          onClick={() =>
+                            handleAvailability(
+                              product._id,
+                              product.isAvailableForPurchase
+                            )
+                          }
+                        >
+                          Deactivate
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem
+                          onClick={() =>
+                            handleAvailability(
+                              product._id,
+                              product.isAvailableForPurchase
+                            )
+                          }
+                        >
+                          Activate
+                        </DropdownMenuItem>
+                      )}
+                      <DeleteProduct
+                        id={product._id}
+                        setProducts={setProducts}
+                      />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
       </TableBody>
     </Table>
   );

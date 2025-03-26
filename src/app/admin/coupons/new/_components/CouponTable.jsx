@@ -10,11 +10,15 @@ function CouponTable() {
   const [coupons, setCoupons] = useState([]);
   const [availableCoupons, setAvailableCoupons] = useState([]);
   const [expiredCoupons, setExpiredCoupons] = useState([]);
+  const [loading, setLoading] = useState(true);
   const date = new Date();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 2000);
+        });
         const data = await getCoupons();
         const available = data.filter((data) => {
           return data.expiresAt > formatDate(date);
@@ -32,6 +36,8 @@ function CouponTable() {
           title: "Error",
           description: error,
         });
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -42,9 +48,14 @@ function CouponTable() {
       <AvailableTable
         availableCoupons={availableCoupons}
         setCoupons={setCoupons}
+        loading={loading}
       />
       {expiredCoupons.length >= 1 ? (
-        <ExpiredTable expiredCoupons={expiredCoupons} setCoupons={setCoupons} />
+        <ExpiredTable
+          expiredCoupons={expiredCoupons}
+          setCoupons={setCoupons}
+          loading={loading}
+        />
       ) : null}
     </div>
   );

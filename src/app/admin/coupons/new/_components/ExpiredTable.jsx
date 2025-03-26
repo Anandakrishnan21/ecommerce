@@ -21,7 +21,7 @@ import Link from "next/link";
 import PageHeader from "@/app/admin/_components/PageHeader";
 import DeleteCoupon from "@/app/admin/_components/DeleteCoupon";
 
-function ExpiredTable({ expiredCoupons, setCoupons }) {
+function ExpiredTable({ expiredCoupons, setCoupons, loading }) {
   return (
     <div className="mt-10">
       <PageHeader variant="small">Expired coupon</PageHeader>
@@ -38,50 +38,76 @@ function ExpiredTable({ expiredCoupons, setCoupons }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {expiredCoupons.map((coupon) => (
-            <TableRow key={coupon._id}>
-              <TableCell>
-                <CircleX size={16} color="red" />
-              </TableCell>
-              <TableCell>{coupon.couponCode}</TableCell>
-              <TableCell>
-                {coupon.type === "percentage"
-                  ? coupon.limit + "%"
-                  : coupon.limit}
-              </TableCell>
-              <TableCell>{coupon.expiresAt}</TableCell>
-              <TableCell>
-                <Infinity />
-              </TableCell>
-              <TableCell>0</TableCell>
-              <TableCell>
-                {coupon.productName == "All products" ? (
-                  <AiOutlineGlobal size={20} />
-                ) : (
-                  coupon.productName
-                )}
-              </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <MoreVertical size={16} />
-                    <span className="sr-only">Action</span>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Download</DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link href={`/admin/coupons/edit/${coupon._id}`}>
-                        Update
-                      </Link>
-                    </DropdownMenuItem>
-                    <DeleteCoupon id={coupon._id} setCoupons={setCoupons} />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
+          {loading
+            ? Array.from({ length: 3 }).map((_, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <Skeleton className="h-4 w-4" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-6" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-28" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-28" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-28" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-28" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-4 w-28" />
+                  </TableCell>
+                </TableRow>
+              ))
+            : expiredCoupons.map((coupon) => (
+                <TableRow key={coupon._id}>
+                  <TableCell>
+                    <CircleX size={16} color="red" />
+                  </TableCell>
+                  <TableCell>{coupon.couponCode}</TableCell>
+                  <TableCell>
+                    {coupon.type === "percentage"
+                      ? coupon.limit + "%"
+                      : coupon.limit}
+                  </TableCell>
+                  <TableCell>{coupon.expiresAt}</TableCell>
+                  <TableCell>
+                    <Infinity />
+                  </TableCell>
+                  <TableCell>0</TableCell>
+                  <TableCell>
+                    {coupon.productName == "All products" ? (
+                      <AiOutlineGlobal size={20} />
+                    ) : (
+                      coupon.productName
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <MoreVertical size={16} />
+                        <span className="sr-only">Action</span>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Download</DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link href={`/admin/coupons/edit/${coupon._id}`}>
+                            Update
+                          </Link>
+                        </DropdownMenuItem>
+                        <DeleteCoupon id={coupon._id} setCoupons={setCoupons} />
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
         </TableBody>
       </Table>
     </div>
